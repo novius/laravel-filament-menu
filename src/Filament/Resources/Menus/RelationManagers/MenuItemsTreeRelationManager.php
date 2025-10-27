@@ -6,7 +6,6 @@ use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Enums\RecordActionsPosition;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 use Kalnoy\Nestedset\NodeTrait;
@@ -41,7 +40,7 @@ class MenuItemsTreeRelationManager extends TreeRelationManager
                     ->url(fn (MenuItem $record) => MenuItemResource::getUrl('edit', ['record' => $record])),
                 DeleteAction::make()
                     ->successRedirectUrl(MenuResource::getUrl('edit', ['record' => $this->ownerRecord])),
-            ], RecordActionsPosition::BeforeCells);
+            ]);
     }
 
     public static function getTitle(Model $ownerRecord, string $pageClass): string
