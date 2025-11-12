@@ -3,10 +3,13 @@
 namespace Novius\LaravelFilamentMenu;
 
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Novius\LaravelFilamentMenu\Listeners\MenuItemLinkableChanged;
 use Novius\LaravelFilamentMenu\Models\Menu;
 use Novius\LaravelFilamentMenu\Services\MenuManagerService;
+use Novius\LaravelLinkable\Events\LinkableChanged;
 
 class LaravelFilamentMenuServiceProvider extends ServiceProvider
 {
@@ -29,6 +32,8 @@ class LaravelFilamentMenuServiceProvider extends ServiceProvider
         Blade::componentNamespace('Novius\\LaravelFilamentMenu\\View\\Components', 'laravel-filament-menu');
 
         Route::model('menu', config('laravel-filament-menu.models.menu', Menu::class));
+
+        Event::listen(LinkableChanged::class, MenuItemLinkableChanged::class);
     }
 
     /**
