@@ -14,16 +14,10 @@ jobs:
     steps:
       - uses: shivammathur/setup-php@v2
         with:
-          php-versions: '8.3'
+          php-version: '8.4'
 
       - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: Cache composer dependencies
-        uses: actions/cache@v3
-        with:
-          path: vendor
-          key: composer-${{ hashFiles('composer.lock') }}
 
       - name: Install Dependencies
         run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
@@ -32,24 +26,23 @@ jobs:
         run: composer run-script lint
 
   phpstan:
-
     runs-on: ubuntu-latest
+
     strategy:
       fail-fast: false
       matrix:
-        operating-system: ['ubuntu-latest']
         php-versions: ['8.2', '8.3', '8.4']
         laravel: [ 11.*, 12.* ]
-        dependency-version: [ prefer-stable ]
+        filament: [ 4.*, 5.* ]
         include:
           - laravel: 12.*
-            testbench: 10.*
             carbon: 3.*
+            testbench: 10.*
           - laravel: 11.*
-            testbench: 9.*
             carbon: 2.*
+            testbench: 9.*
 
-    name: phpstan - P${{ matrix.php-version }} - L${{ matrix.laravel }} - ${{ matrix.dependency-version }} - ${{ matrix.os }}
+    name: phpstan - P${{ matrix.php-versions }} - L${{ matrix.laravel }} - F${{ matrix.filament }}
 
     steps:
       - uses: shivammathur/setup-php@v2
@@ -59,16 +52,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Cache composer dependencies
-        uses: actions/cache@v3
-        with:
-          path: vendor
-          key: composer-${{ hashFiles('composer.lock') }}
-
       - name: Install Dependencies
         run: |
-          composer require "laravel/framework:${{ matrix.laravel }}" "nesbot/carbon:${{ matrix.carbon }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
-          composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction
+          composer require "laravel/framework:${{ matrix.laravel }}" "filament/filament:${{ matrix.filament }}" "nesbot/carbon:${{ matrix.carbon }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
+          composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
 
-      - name: PHPStan Static Analysis
+      - name: PhPStan
         run: composer run-script phpstan
