@@ -5,22 +5,24 @@
 @endphp
 
 <nav role="navigation"
+     id="menu-{{ $menu->slug }}"
      aria-label="{{ $menu->aria_label ?? $menu->title ?? $menu->name }}"
      @class($containerClasses)
 >
     @if ($menu->template->hasTitle())
-        <span @class($titleClasses)>
+        <x-laravel-filament-menu::dynamic-tag :tag="$titleTag" @class($titleClasses)>
             {{ $menu->title ?? $menu->name }}
-        </span>
+        </x-laravel-filament-menu::dynamic-tag>
     @endif
-    <ul @class($containerItemsClasses())>
+    <ul @class([...$listClasses(), ...$listRootClasses()]) data-depth="0">
         @foreach($items as $item)
             {!! $menu->template->renderItem(
                 $menu,
                 $item,
-                $containerItemsClasses,
-                $containerItemClasses,
+                $listClasses,
+                $itemContainerClasses,
                 $itemClasses,
+                $itemEmptyTag,
                 $itemActiveClasses,
                 $itemContainsActiveClasses
             ) !!}
