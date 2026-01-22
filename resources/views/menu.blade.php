@@ -5,25 +5,17 @@
 @endphp
 
 <nav role="navigation"
-     aria-label="{{ $menu->aria_label ?? $menu->title ?? $menu->name }}"
-     @class($containerClasses)
+    id="menu-{{ $menu->slug }}"
+    aria-label="{{ $menu->aria_label ?? $menu->title ?? $menu->name }}"
+    @class(['lfm-'.$menu->slug])
 >
     @if ($menu->template->hasTitle())
-        <span @class($titleClasses)>
-            {{ $menu->title ?? $menu->name }}
-        </span>
+        <{{$titleTag}} class="lfm-title">{{ $menu->title ?? $menu->name }}</{{$titleTag}}>
     @endif
-    <ul @class($containerItemsClasses())>
+
+    <ul class="lfm-items-container lfm--is-root" data-depth="0">
         @foreach($items as $item)
-            {!! $menu->template->renderItem(
-                $menu,
-                $item,
-                $containerItemsClasses,
-                $containerItemClasses,
-                $itemClasses,
-                $itemActiveClasses,
-                $itemContainsActiveClasses
-            ) !!}
+            {!! $menu->template->renderItem($menu, $item, $itemEmptyTag) !!}
         @endforeach
     </ul>
 </nav>

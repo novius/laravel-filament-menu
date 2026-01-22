@@ -15,13 +15,8 @@ class Menu extends Component
     public function __construct(
         string $menuSlug,
         ?string $locale = null,
-        protected Closure|array|string|null $containerClasses = null,
-        protected Closure|array|string|null $titleClasses = null,
-        protected Closure|array|string|null $containerItemsClasses = null,
-        protected Closure|array|string|null $containerItemClasses = null,
-        protected Closure|array|string|null $itemClasses = null,
-        protected ?string $itemActiveClasses = null,
-        protected ?string $itemContainsActiveClasses = null,
+        protected Closure|string|null $titleTag = 'span',
+        protected Closure|string|null $itemEmptyTag = 'span',
     ) {
         $this->menu = MenuModel::query()
             ->where('slug', $menuSlug)
@@ -48,13 +43,8 @@ class Menu extends Component
         return $this->menu->template->render(
             $this->menu,
             $items,
-            $this->containerClasses,
-            $this->titleClasses,
-            $this->containerItemsClasses,
-            $this->containerItemClasses,
-            $this->itemClasses,
-            $this->itemActiveClasses,
-            $this->itemContainsActiveClasses,
+            $this->titleTag,
+            $this->itemEmptyTag,
         );
     }
 }

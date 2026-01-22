@@ -1,4 +1,4 @@
-# Laravel Filament Menu manager
+# Laravel Filament Menu Manager
 
 [![Novius CI](https://github.com/novius/laravel-filament-menu/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/novius/laravel-filament-menu/actions/workflows/main.yml)
 [![Packagist Release](https://img.shields.io/packagist/v/novius/laravel-filament-menu.svg?maxAge=1800&style=flat-square)](https://packagist.org/packages/novius/laravel-filament-menu)
@@ -12,7 +12,7 @@ This [Laravel Filament](https://filamentphp.com/) package allows you to manage m
 
 * PHP >= 8.2
 * Laravel Filament >= 4
-* Laravel Framework >= 11.0 
+* Laravel Framework >= 11.0
 
 ## Installation
 
@@ -20,19 +20,19 @@ This [Laravel Filament](https://filamentphp.com/) package allows you to manage m
 composer require novius/laravel-filament-menu
 ```
 
-Publish Filament assets
+Publish the Filament assets:
 
 ```sh
 php artisan filament:assets
 ```
 
-Then, launch migrations 
+Then run the migrations:
 
 ```sh
 php artisan migrate
 ```
 
-In your `AdminFilamentPanelProvider` add the `MenuManagerPlugin` :
+In your `AdminFilamentPanelProvider`, add the `MenuManagerPlugin`:
 
 ```php
 use Novius\LaravelFilamentMenu\Filament\MenuManagerPlugin;
@@ -54,7 +54,7 @@ class AdminFilamentPanelProvider extends PanelProvider
 
 ### Configuration
 
-Some options that you can override are available.
+Several options are available for you to override.
 
 ```sh
 php artisan vendor:publish --provider="Novius\LaravelFilamentMenu\LaravelFilamentMenuServiceProvider" --tag="config"
@@ -64,68 +64,56 @@ php artisan vendor:publish --provider="Novius\LaravelFilamentMenu\LaravelFilamen
 
 ### Blade directive
 
-You can display menu with : 
+You can display a menu with:
 
 ```bladehtml
-<x-laravel-filament-menu::menu 
-    menu-slug="slug-of-menu" 
+<x-laravel-filament-menu::menu
+    menu-slug="slug-of-menu"
     locale="fr"
-    container-classes="p6"
-    title-classes="font-bold"
-    container-items-classes="flex flex-col gap-x-6"
-    container-item-classes="p6"
-    item-classes="p6"
-    item-active-classes="active"
-    item-contains-active-classes="open"
+    title-tag="h3"
+    item-empty-tag="span"
 />
 ```
-    
-* `locale` : optional, will use the current locale by default
-* `container-classes` : optional, null by default. Css classes for the menu container (`<nav>`), can be a string, an array or a Closure taking the menu as single paramater
-* `title-classes` : optional, null by default. Css classes for the menu title (`<div>`), can be a string, an array or a Closure taking the menu as single paramater
-* `container-items-classes` : optional, null by default. Css classes for the menu container of a list of items (`<ul>`), can be a string, an array or a Closure taking the item menu as single paramater
-* `container-item-classes` : optional, null by default. Css classes for the item menu container (`<li>`), can be a string, an array or a Closure taking the item menu as single paramater
-* `item-classes` : optional, null by default. Css classes for the item menu (`<a>` or `<div>`), can be a string, an array or a Closure taking the item menu as single paramater
-* `item-active-classes` : optional, null by default. Css classes for the active item menu (`<a>`), must be a string. `data-active="true"` attribute will be added to the item menu if the item is active.
-* `item-contains-active-classes` : optional, null by default. Css classes for item menu containers (`<ul>`) containing the active item (`<a>`), must be a string. `data-open="true"` attribute will be added to the item menu if the item is active.
+* `menu-slug`: required, the slug of your menu.
+* `locale`: optional, defaults to the current locale.
+* `title-tag`: optional, `span` by default. Use it to change the title HTML tag if needed (useful for website footers).
+* `item-empty-tag`: optional, `span` by default. Use it to change the HTML tag of menu items that are neither links nor HTML blocks.
 
-Here the sample of the css classes implemenations in HTML :
+Here is a sample HTML structure with the CSS classes applied:
 
 ```bladehtml
-<nav role="navigation"
-     aria-label="{{ $menu->aria_label ?? $menu->title ?? $menu->name }}"
-     class="{-- container-classes --}"
->
-  <span class="{-- title-classes --}">{{ $menu->title ?? $menu->name }}</span>
-  <ul class="{-- container-items-classes --}">
-    <li class="{-- container-item-classes --}">
-      <a href="{{ $item->href() }}" class="{-- item-classes --}" >{{ $item->title }}</a>
-    </li>
-    <li class="{-- container-item-classes --}">
-      <a href="{{ $item->href() }}" class="{-- item-classes --}" >{{ $item->title }}</a>
+<nav role="navigation" class="lfm-{{ $menu->slug }}"
+    id="lfm-{{ $menu->slug }}"
+    aria-label="{{ $menu->aria_label ?? $menu->title ?? $menu->name }}">
+    <[titleTag] class="menu-title">{{ $menu->title ?? $menu->name }}</[titleTag]>
 
-      <ul class="{-- container-items-classes & item-contains-active-classes --}" data-open="true">
-        <li class="{-- container-item-classes --}">
-          <a href="{{ $item->href() }}" class="{-- item-classes --}" >{{ $item->title }}</a>
+    <ul class="lfm-items-container lfm--is-root" data-depth="0">
+        <li class="lfm-item-li">
+            <a href="{{ $item->href() }}" class="lfm-item">{{ $item->title }}</a>
         </li>
-        <li class="{-- container-item-classes --}">
-          <a href="{{ $item->href() }}"
-             data-active="true"
-             class="{-- item-classes & item-active-classes --}"
-          >
-            {{ $item->title }}
-          </a>
+        
+        <li class="lfm-item-li lfm--has-children">
+            <a href="{{ $item->href() }}" class="lfm-item">{{ $item->title }}</a>
+
+            <ul class="lfm-items-container lfm--has-active-item" data-depth="1">
+                <li class="lfm-item-li">
+                    <a href="{{ $item->href() }}" class="lfm-item">{{ $item->title }}</a>
+                </li>
+
+                <li class="lfm-item-li">
+                    <a href="{{ $item->href() }}" class="lfm-item lfm--active" data-active="true">{{ $item->title }}</a>
+                </li>
+
+                <li class="lfm-item-li">
+                    <a href="{{ $item->href() }}" class="lfm-item">{{ $item->title }}</a>
+                </li>
+            </ul>
         </li>
-        <li class="{-- container-item-classes --}">
-          <a href="{{ $item->href() }}" class="{-- item-classes --}" >{{ $item->title }}</a>
-        </li>
-      </ul>
-    </li>
-  </ul>
+    </ul>
 </nav>
 ```
 
-### Write your owned template
+### Write your own template
 
 #### Template class
 
@@ -135,9 +123,9 @@ namespace App\Menus\Templates;
 use Novius\LaravelFilamentMenu\Concerns\IsMenuTemplate;
 use Novius\LaravelFilamentMenu\Contracts\MenuTemplate;
 
-class MyMenuTemplate implements MenuTemplate // Must implement MenuTemplate interface
+class MyMenuTemplate implements MenuTemplate // Must implement the MenuTemplate interface
 {
-    use IsMenuTemplate; // This trait will defined required method with default implementation
+    use IsMenuTemplate; // This trait defines the required methods with default implementations
 
     public function key(): string
     {
@@ -151,116 +139,119 @@ class MyMenuTemplate implements MenuTemplate // Must implement MenuTemplate inte
 
     public function hasTitle(): bool
     {
-        return true; // Define if the menu need a title displaying in front. False by default if you don't implement this method
+        return true; // Indicates whether the menu needs a title displayed on the front end
     }
 
     public function maxDepth(): int
     {
-        return 1; //Define the max depth of the menu
+        return 1; // Defines the maximum menu depth
     }
 
     public function fields(): array
     {
         return [
-            \Filament\Forms\Components\DatePicker::make('extras.date'), // You can add additionals fields on items. Prefix field name by `extras.` to save them in the extras field
+            \Filament\Forms\Components\DatePicker::make('extras.date'), // You can add additional fields to items; prefix names with `extras.` to store them in the extras field
         ];
     }
 
     public function casts(): array
     {
         return [
-            'date' => 'date:Y-m-d', // If you add additionals fields on items, you can define their casts
+            'date' => 'date:Y-m-d', // Define casts for any additional item fields
         ];
     }
 
     public function view(): string
     {
-        return 'menus.my-template'; // Define the view used to display this the menu
+        return 'menus.my-template'; // View used to render the menu
     }
 
     public function viewItem(): string
     {
-        return 'menus.my-template-item'; // Define the view used to display an item of the menu
+        return 'menus.my-template-item'; // View used to render individual menu items
     }
 }
 ```
+
 #### Template views
 
-First the view to display the menu :
+First, the view to display the menu:
 
 ```bladehtml
 @php
     use Novius\LaravelFilamentMenu\Models\Menu;
 @endphp
 <nav role="navigation"
-     aria-label="{{ $menu->aria_label ?? $menu->title ?? $menu->name }}"
-     @class($containerClasses)
+    id="menu-{{ $menu->slug }}"
+    aria-label="{{ $menu->aria_label ?? $menu->title ?? $menu->name }}"
+    @class(['lfm-'.$menu->slug])
 >
     @if ($menu->template->hasTitle())
-        <div @class($titleClasses)>
-            {{ $menu->title ?? $menu->name }}
-        </div>
+        <{{$titleTag}} class="lfm-title">{{ $menu->title ?? $menu->name }}</{{$titleTag}}>
     @endif
-    <ul @class($containerItemsClasses)>
-        @foreach($items as $item)
-            {!! $menu->template->renderItem($menu, $item, $containerItemsClasses, $containerItemClasses, $itemClasses) !!}
+
+    <ul class="lfm-items-container lfm--is-root" data-depth="0">
+        @foreach ($items as $item)
+            {!! $menu->template->renderItem($menu, $item, $itemEmptyTag) !!}
         @endforeach
     </ul>
 </nav>
 ```
 
-The the view to display an item of the menu
+Then, the view to display an item of the menu:
 
 ```bladehtml
 @php
-    use Novius\LaravelFilamentMenu\Enums\LinkType;use Novius\LaravelFilamentMenu\Models\Menu;
+    use Novius\LaravelFilamentMenu\Enums\LinkType;
+    use Novius\LaravelFilamentMenu\Models\Menu;
     use Novius\LaravelFilamentMenu\Models\MenuItem;
 @endphp
-<li @class($containerItemClasses)>
+<li @class([
+    'lfm-item-li',
+    $item->children->isNotEmpty() ? 'lfm--has-children' : '',
+])>
     @if ($item->link_type === LinkType::html)
         {!! $item->html !!}
     @elseif ($item->link_type !== LinkType::empty)
         <a href="{{ $item->href() }}"
-           {{ $menu->template->isActiveItem($item) ? 'data-active="true"' : ''}}
+            {{ $menu->template->isActiveItem($item) ? 'data-active="true"' : '' }}
             @class([
-                ...$itemClasses($item),
-                $item->htmlClasses
+                'lfm-item',
+                'lfm--active' => $menu->template->isActiveItem($item),
+                $item->html_classes
             ])
             {{ $item->target_blank ? 'target="_blank"' : '' }}
         >
-                {{ $item->title }}
+            {{ $item->title }}
         </a>
     @else
-        <div @class([
-             ...$itemClasses($item),
-             $item->htmlClasses
-        ])>
+        <{{$itemEmptyTag}} @class(['lfm-item', $item->html_classes])>
             {{ $item->title }}
-        </div>
+        </{{$itemEmptyTag}}>
     @endif
 
     @if ($item->children->isNotEmpty())
-        <ul
-            @class($containerItemsClasses)
-            {{ $menu->template->containtActiveItem($item) ? 'data-open="true"' : ''}}
-        >
-            @foreach($item->children as $item)
-                {!! $menu->template->renderItem($menu, $item) !!}
+        <ul @class([
+            'lfm-items-container',
+            $menu->template->containsActiveItem($item) ? 'lfm--has-active-item' : '',
+        ]) data-depth="{{ $item->depth + 1 }}">
+            @foreach ($item->children as $item)
+                {!! $menu->template->renderItem($menu, $item, $itemEmptyTag) !!}
             @endforeach
         </ul>
     @endif
 </li>
 ```
 
-### Manage internal link possibilities
+### Manage internal links
 
-Laravel Filament Menu uses [Laravel Linkable](https://github.com/novius/laravel-linkable) to manage linkable routes and models. Please read the documentation.
+Laravel Filament Menu uses [Laravel Linkable](https://github.com/novius/laravel-linkable) to manage linkable routes and models. Refer to its documentation for detailed usage instructions.
 
 ### Seeder
 
 You can use the `\Novius\LaravelFilamentMenu\Database\Seeders\MenuSeeder` to create menus.
 
-Create a new seeder, extend the class and define the `menus()` method. You can also override the `postCreate()` method to add custom logic.
+Create a new seeder, extend the class, and define the `menus()` method. You can also override the `postCreate()` method to add custom logic.
 
 ```php
 namespace Database\Seeders;
@@ -293,7 +284,7 @@ class MenuSeeder extends \Novius\LaravelFilamentMenu\Database\Seeders\MenuSeeder
 
 ## Lint
 
-Run php-cs with:
+Run PHP-CS Fixer with:
 
 ```sh
 composer run-script lint
@@ -302,9 +293,9 @@ composer run-script lint
 ## Contributing
 
 Contributions are welcome!
-Leave an issue on Github, or create a Pull Request.
+Leave an issue on GitHub, or create a Pull Request.
 
 
-## Licence
+## License
 
 This package is under [GNU Affero General Public License v3](http://www.gnu.org/licenses/agpl-3.0.html) or (at your option) any later version.
