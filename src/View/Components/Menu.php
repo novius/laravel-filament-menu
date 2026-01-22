@@ -15,7 +15,7 @@ class Menu extends Component
     public function __construct(
         string $menuSlug,
         ?string $locale,
-        protected Closure|array|string|null $containerClasses = ['lfm-'.$menuSlug],
+        protected Closure|array|string|null $containerClasses = null,
         protected Closure|array|string|null $titleClasses = ['lfm-title'],
         protected Closure|string|null $titleTag = 'span',
         protected Closure|array|string|null $listClasses = ['lfm-items-container'],
@@ -26,6 +26,8 @@ class Menu extends Component
         protected ?string $itemActiveClasses = null,
         protected ?string $itemContainsActiveClasses = null,
     ) {
+        $this->containerClasses = $containerClasses ?? ['lfm-container'];
+
         $this->menu = MenuModel::query()
             ->where('slug', $menuSlug)
             ->where('locale', $locale ?? app()->getLocale())
