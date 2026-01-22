@@ -25,7 +25,7 @@ trait IsMenuTemplate
         return $item->href() === url()->current();
     }
 
-    public function containtActiveItem(MenuItem $item): bool
+    public function containsActiveItem(MenuItem $item): bool
     {
         foreach ($item->descendants as $descendant) {
             if ($this->isActiveItem($descendant)) {
@@ -56,25 +56,31 @@ trait IsMenuTemplate
         Collection $items,
         Closure|array|string|null $containerClasses = null,
         Closure|array|string|null $titleClasses = null,
-        Closure|array|string|null $containerItemsClasses = null,
-        Closure|array|string|null $containerItemClasses = null,
+        Closure|string|null $titleTag = 'span',
+        Closure|array|string|null $listClasses = null,
+        Closure|array|string|null $listRootClasses = null,
+        Closure|array|string|null $itemContainerClasses = null,
         Closure|array|string|null $itemClasses = null,
+        Closure|string|null $itemEmptyTag = 'span',
         ?string $itemActiveClasses = null,
         ?string $itemContainsActiveClasses = null,
-
     ): string {
         $containerClasses = (array) (is_callable($containerClasses) ? $containerClasses($menu) : $containerClasses);
         $titleClasses = (array) (is_callable($titleClasses) ? $titleClasses($menu) : $titleClasses);
-        $containerItemsClassesCallback = static fn (?MenuItem $item = null) => (array) (is_callable($containerItemsClasses) ? $containerItemsClasses($item) : $containerItemsClasses);
+        $listClassesCallback = static fn (?MenuItem $item = null) => (array) (is_callable($listClasses) ? $listClasses($item) : $listClasses);
+        $listRootClassesCallback = static fn (?MenuItem $item = null) => (array) (is_callable($listRootClasses) ? $listRootClasses($item) : $listRootClasses);
 
         return view($this->view(), [
             'menu' => $menu,
             'items' => $items,
             'containerClasses' => $containerClasses,
             'titleClasses' => $titleClasses,
-            'containerItemsClasses' => $containerItemsClassesCallback,
-            'containerItemClasses' => $containerItemClasses,
+            'titleTag' => $titleTag,
+            'listClasses' => $listClassesCallback,
+            'listRootClasses' => $listRootClassesCallback,
+            'itemContainerClasses' => $itemContainerClasses,
             'itemClasses' => $itemClasses,
+            'itemEmptyTag' => $itemEmptyTag,
             'itemActiveClasses' => $itemActiveClasses,
             'itemContainsActiveClasses' => $itemContainsActiveClasses,
         ])->render();
@@ -88,22 +94,24 @@ trait IsMenuTemplate
     public function renderItem(
         Menu $menu,
         MenuItem $item,
-        Closure|array|string|null $containerItemsClasses = null,
-        Closure|array|string|null $containerItemClasses = null,
+        Closure|array|string|null $listClasses = null,
+        Closure|array|string|null $itemContainerClasses = null,
         Closure|array|string|null $itemClasses = null,
+        Closure|string|null $itemEmptyTag = 'span',
         ?string $itemActiveClasses = null,
         ?string $itemContainsActiveClasses = null,
     ): string {
-        $containerItemsClasses = (array) (is_callable($containerItemsClasses) ? $containerItemsClasses($item) : $containerItemsClasses);
-        $containerItemClasses = (array) (is_callable($containerItemClasses) ? $containerItemClasses($item) : $containerItemClasses);
+        $listClasses = (array) (is_callable($listClasses) ? $listClasses($item) : $listClasses);
+        $itemContainerClasses = (array) (is_callable($itemContainerClasses) ? $itemContainerClasses($item) : $itemContainerClasses);
         $itemClasses = (array) (is_callable($itemClasses) ? $itemClasses($item) : $itemClasses);
 
         return view($this->viewItem(), [
             'menu' => $menu,
             'item' => $item,
-            'containerItemsClasses' => $containerItemsClasses,
-            'containerItemClasses' => $containerItemClasses,
+            'listClasses' => $listClasses,
+            'itemContainerClasses' => $itemContainerClasses,
             'itemClasses' => $itemClasses,
+            'itemEmptyTag' => $itemEmptyTag,
             'itemActiveClasses' => $itemActiveClasses,
             'itemContainsActiveClasses' => $itemContainsActiveClasses,
         ])->render();

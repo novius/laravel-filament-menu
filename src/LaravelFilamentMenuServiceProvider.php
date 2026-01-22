@@ -30,6 +30,7 @@ class LaravelFilamentMenuServiceProvider extends ServiceProvider
         $this->publishes([$packageDir.'/lang' => lang_path('vendor/laravel-filament-menu')], 'lang');
 
         Blade::componentNamespace('Novius\\LaravelFilamentMenu\\View\\Components', 'laravel-filament-menu');
+        Blade::anonymousComponentPath($packageDir.'/../resources/views/components', 'laravel-filament-menu');
 
         Route::model('menu', config('laravel-filament-menu.models.menu', Menu::class));
 

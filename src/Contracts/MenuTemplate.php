@@ -19,7 +19,7 @@ interface MenuTemplate
 
     public function isActiveItem(MenuItem $item): bool;
 
-    public function containtActiveItem(MenuItem $item): bool;
+    public function containsActiveItem(MenuItem $item): bool;
 
     /** @return array<\Filament\Schemas\Components\Component> */
     public function fields(): array;
@@ -35,9 +35,12 @@ interface MenuTemplate
         Collection $items,
         Closure|array|string|null $containerClasses = null,
         Closure|array|string|null $titleClasses = null,
-        Closure|array|string|null $containerItemsClasses = null,
-        Closure|array|string|null $containerItemClasses = null,
+        Closure|string|null $titleTag = 'span',
+        Closure|array|string|null $listClasses = null,
+        Closure|array|string|null $listRootClasses = null,
+        Closure|array|string|null $itemContainerClasses = null,
         Closure|array|string|null $itemClasses = null,
+        Closure|string|null $itemEmptyTag = 'span',
         ?string $itemActiveClasses = null,
         ?string $itemContainsActiveClasses = null,
     ): string;
@@ -45,9 +48,10 @@ interface MenuTemplate
     public function renderItem(
         Menu $menu,
         MenuItem $item,
-        Closure|array|string|null $containerItemsClasses = null,
-        Closure|array|string|null $containerItemClasses = null,
+        Closure|array|string|null $listClasses = null,
+        Closure|array|string|null $itemContainerClasses = null,
         Closure|array|string|null $itemClasses = null,
+        Closure|string|null $itemEmptyTag = 'span',
         ?string $itemActiveClasses = null,
         ?string $itemContainsActiveClasses = null,
     ): string;
