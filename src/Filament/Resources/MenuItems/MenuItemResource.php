@@ -152,6 +152,17 @@ class MenuItemResource extends Resource
                             $set('linkable_id', null);
                             $set('internal_route', $state);
                         }
+                    })
+                    ->dehydrateStateUsing(function (Get $get, Set $set, $state) {
+                        $linkable_type = $get('linkable_type');
+                        $linkable_id = $get('linkable_id');
+                        if ($linkable_type && $linkable_id) {
+                            $set('internal_route', $linkable_type.':'.$linkable_id);
+
+                            return $linkable_type.':'.$linkable_id;
+                        }
+
+                        return $state;
                     }),
 
                 Hidden::make('linkable_type'),
