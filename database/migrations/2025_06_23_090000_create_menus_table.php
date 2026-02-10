@@ -47,12 +47,12 @@ return new class extends Migration
             $table->foreign('menu_id')
                 ->references('id')
                 ->on('menus')
-                ->onDelete('cascade');
+                ->cascadeOnDelete();
 
             $table->foreign('parent_id')
                 ->references('id')
                 ->on('menu_items')
-                ->onDelete('cascade');
+                ->cascadeOnDelete();
         });
     }
 
