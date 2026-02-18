@@ -317,7 +317,7 @@ Then, the view to display an item of the menu:
             data-depth="{{ $item->depth + 1 }}"
             @if ($menu->template->containsActiveItem($item)) data-active-items="true" @endif
             @class([
-                ...$containerItemsClasses,
+                ...$listClasses,
                 $menu->template->containsActiveItem($item) ? $itemContainsActiveClasses : '',
             ])
         >
