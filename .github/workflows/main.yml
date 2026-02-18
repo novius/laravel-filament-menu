@@ -79,19 +79,25 @@ jobs:
         laravel: [ 11.*, 12.* ]
         filament: [ 4.*, 5.* ]
         include:
-          - laravel: 12.*
+          - php-versions: 8.2
+            laravel: 12.*
             carbon: 3.*
             testbench: 10.*
-          - laravel: 11.*
+            pest: '^3.0'
+          - php-versions: 8.*
+            laravel: 12.*
+            carbon: 3.*
+            testbench: 10.*
+            pest: '^4.0'
+          - php-versions: 8.2
+            laravel: 11.*
             carbon: 2.*
             testbench: 9.*
-          - php-versions: '8.2'
             pest: '^3.0'
-          - php-versions: '8.3'
-            pest: '^4.0'
-          - php-versions: '8.4'
-            pest: '^4.0'
-          - php-versions: '8.5'
+          - php-versions: 8.*
+            laravel: 11.*
+            carbon: 2.*
+            testbench: 9.*
             pest: '^4.0'
         exclude:
           - php-versions: '8.2'
