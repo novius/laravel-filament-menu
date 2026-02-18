@@ -57,6 +57,7 @@ class Menu extends Component
             $this->titleClasses,
             $this->titleTag,
             $this->listClasses,
+            $this->listRootClasses,
             $this->itemContainerClasses,
             $this->itemClasses,
             $this->itemEmptyTag,
