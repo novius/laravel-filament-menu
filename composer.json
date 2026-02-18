@@ -87,24 +87,6 @@
             "@php vendor/bin/testbench serve --ansi"
         ]
     },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "git@github.com:novius/laravel-linkable.git"
-        },
-        {
-            "type": "vcs",
-            "url": "git@github.com:novius/laravel-filament-translatable.git"
-        },
-        {
-            "type": "vcs",
-            "url": "git@github.com:novius/laravel-filament-slug.git"
-        },
-        {
-            "type": "vcs",
-            "url": "git@github.com:novius/filament-relation-nested.git"
-        }
-    ],
     "config": {
         "sort-packages": true,
         "allow-plugins": {
