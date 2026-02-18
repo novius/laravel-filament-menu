@@ -94,5 +94,5 @@ jobs:
           composer require "laravel/framework:${{ matrix.laravel }}" "filament/filament:${{ matrix.filament }}" "nesbot/carbon:${{ matrix.carbon }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
           composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
 
-      - name: PHPUnit
-        run: vendor/bin/phpunit
+      - name: Pest
+        run: vendor/bin/pest

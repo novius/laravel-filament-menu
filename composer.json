@@ -31,7 +31,10 @@
         "larastan/larastan": "^2.0 | ^3.0",
         "laravel/pint": "^1.7",
         "orchestra/testbench": "^10.3",
-        "roave/security-advisories": "dev-latest"
+        "pestphp/pest": "^4.4",
+        "pestphp/pest-plugin-laravel": "^4.0",
+        "roave/security-advisories": "dev-latest",
+        "symfony/dom-crawler": "^7.4"
     },
     "autoload": {
         "psr-4": {
@@ -69,7 +72,7 @@
             "vendor/bin/phpstan analyse --memory-limit 1G"
         ],
         "test": [
-            "vendor/bin/phpunit"
+            "vendor/bin/pest"
         ],
         "post-autoload-dump": [
             "@clear",
@@ -103,7 +106,10 @@
         }
     ],
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true
