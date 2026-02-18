@@ -91,6 +91,8 @@ jobs:
             pest: '^4.0'
           - php-versions: '8.4'
             pest: '^4.0'
+          - php-versions: '8.5'
+            pest: '^4.0'
         exclude:
           - php-versions: '8.2'
             filament: 5.*
