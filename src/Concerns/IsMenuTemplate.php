@@ -65,6 +65,9 @@ trait IsMenuTemplate
         ?string $itemActiveClasses = null,
         ?string $itemContainsActiveClasses = null,
     ): string {
+        if ($containerClasses === null) {
+            $containerClasses = static fn (Menu $menu) => ['lfm-'.$menu->slug];
+        }
         $containerClasses = (array) (is_callable($containerClasses) ? $containerClasses($menu) : $containerClasses);
         $titleClasses = (array) (is_callable($titleClasses) ? $titleClasses($menu) : $titleClasses);
         $listClassesCallback = static fn (?MenuItem $item = null) => (array) (is_callable($listClasses) ? $listClasses($item) : $listClasses);

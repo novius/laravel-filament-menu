@@ -1,0 +1,1 @@
+{"version":2,"defects":[],"times":{"Novius\\LaravelFilamentMenu\\Tests\\MenuDomTest::test_it_renders_empty_string_when_menu_not_found":0.019,"Novius\\LaravelFilamentMenu\\Tests\\MenuDomTest::test_it_renders_nav_with_defaults_and_title_and_list_structure":0.02,"Novius\\LaravelFilamentMenu\\Tests\\MenuDomTest::test_it_marks_active_item_and_contains_active_on_parent_list":0.011}}

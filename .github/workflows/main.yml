@@ -59,3 +59,40 @@ jobs:
 
       - name: PhPStan
         run: composer run-script phpstan
+
+  phpunit:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php-versions: ['8.2', '8.3', '8.4']
+        laravel: [ 11.*, 12.* ]
+        filament: [ 4.*, 5.* ]
+        include:
+          - laravel: 12.*
+            carbon: 3.*
+            testbench: 10.*
+          - laravel: 11.*
+            carbon: 2.*
+            testbench: 9.*
+
+    name: phpunit - P${{ matrix.php-versions }} - L${{ matrix.laravel }} - F${{ matrix.filament }}
+
+    steps:
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick
+          coverage: none
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Dependencies
+        run: |
+          composer require "laravel/framework:${{ matrix.laravel }}" "filament/filament:${{ matrix.filament }}" "nesbot/carbon:${{ matrix.carbon }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
+          composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+
+      - name: PHPUnit
+        run: vendor/bin/phpunit

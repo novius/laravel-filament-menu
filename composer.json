@@ -68,6 +68,9 @@
         "phpstan": [
             "vendor/bin/phpstan analyse --memory-limit 1G"
         ],
+        "test": [
+            "vendor/bin/phpunit"
+        ],
         "post-autoload-dump": [
             "@clear",
             "@prepare"
