@@ -133,6 +133,8 @@ jobs:
             php-versions: '8.2'
           - php-versions: '8.2'
             filament: 5.*
+          - laravel: 13.*
+            filament: 4.*
 
     name: test - P${{ matrix.php-versions }} - L${{ matrix.laravel }} - F${{ matrix.filament }}
 
