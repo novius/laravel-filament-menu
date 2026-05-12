@@ -11,5 +11,8 @@ parameters:
     editorUrlTitle: '%%file%%:%%line%%'
 
     ignoreErrors:
-        - identifier: phpDoc.parseError
-        - identifier: generics.notGeneric
+        -
+            identifier: phpDoc.parseError
+        -
+            identifier: generics.notGeneric
+        - "#toTree#"

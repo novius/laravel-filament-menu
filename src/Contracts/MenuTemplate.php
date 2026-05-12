@@ -3,6 +3,7 @@
 namespace Novius\LaravelFilamentMenu\Contracts;
 
 use Closure;
+use Filament\Schemas\Components\Component;
 use Kalnoy\Nestedset\Collection;
 use Novius\LaravelFilamentMenu\Models\Menu;
 use Novius\LaravelFilamentMenu\Models\MenuItem;
@@ -21,7 +22,7 @@ interface MenuTemplate
 
     public function containsActiveItem(MenuItem $item): bool;
 
-    /** @return array<\Filament\Schemas\Components\Component> */
+    /** @return array<Component> */
     public function fields(): array;
 
     public function casts(): array;

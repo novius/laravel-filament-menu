@@ -3,6 +3,7 @@
 namespace Novius\LaravelFilamentMenu\Tests;
 
 use Novius\LaravelFilamentMenu\LaravelFilamentMenuServiceProvider;
+use Novius\LaravelFilamentMenu\Tests\Support\TestMenu;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 abstract class TestCase extends Orchestra
@@ -28,7 +29,7 @@ abstract class TestCase extends Orchestra
         $app['config']->set('app.locale', 'en');
 
         // Use the test Menu model overriding translatable locales
-        $app['config']->set('laravel-filament-menu.models.menu', \Novius\LaravelFilamentMenu\Tests\Support\TestMenu::class);
+        $app['config']->set('laravel-filament-menu.models.menu', TestMenu::class);
     }
 
     protected function defineDatabaseMigrations(): void

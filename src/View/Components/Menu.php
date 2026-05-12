@@ -41,7 +41,6 @@ class Menu extends Component
         }
 
         $items = Cache::rememberForever($this->menu->getCacheName(), function () {
-            /** @phpstan-ignore method.notFound */
             return MenuItem::scoped(['menu_id' => $this->menu->id])
                 ->withDepth()
                 ->defaultOrder()
