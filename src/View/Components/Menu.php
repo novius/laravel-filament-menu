@@ -5,6 +5,7 @@ namespace Novius\LaravelFilamentMenu\View\Components;
 use Closure;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\View\Component;
+use Kalnoy\Nestedset\Collection;
 use Novius\LaravelFilamentMenu\Models\Menu as MenuModel;
 use Novius\LaravelFilamentMenu\Models\MenuItem;
 
@@ -40,14 +41,23 @@ class Menu extends Component
             return '';
         }
 
-        $items = Cache::rememberForever($this->menu->getCacheName(), function () {
+        $itemsData = Cache::rememberForever($this->menu->getCacheName(), function () {
             return MenuItem::scoped(['menu_id' => $this->menu->id])
                 ->withDepth()
                 ->defaultOrder()
                 ->with(['children', 'descendants', 'ancestors', 'linkable'])
                 ->get()
-                ->toTree();
+                ->toTree()
+                ->toArray();
         });
+        if (! is_array($itemsData)) {
+            Cache::forget($this->menu->getCacheName());
+
+            return $this->render();
+        }
+
+        /** @var Collection<int, MenuItem> $items */
+        $items = $this->hydrateMenuItems($itemsData);
 
         return $this->menu->template->render(
             $this->menu,
@@ -63,5 +73,51 @@ class Menu extends Component
             $this->itemActiveClasses,
             $this->itemContainsActiveClasses,
         );
+    }
+
+    /**
+     * Hydrates MenuItem models and their relations from an array.
+     *
+     * @param  array<int, array<string, mixed>>  $itemsData
+     * @return Collection<int, MenuItem>
+     */
+    protected function hydrateMenuItems(array $itemsData, ?MenuItem $parent = null): Collection
+    {
+        $models = [];
+        foreach ($itemsData as $data) {
+            $childrenData = $data['children'] ?? null;
+            $descendantsData = $data['descendants'] ?? null;
+            $ancestorsData = $data['ancestors'] ?? null;
+            $linkableData = $data['linkable'] ?? null;
+
+            // Remove relations from attributes before hydration
+            $attributes = array_diff_key($data, array_flip(['children', 'descendants', 'ancestors', 'linkable']));
+
+            /** @var MenuItem $item */
+            $item = MenuItem::hydrate([$attributes])->first();
+
+            if ($parent) {
+                $item->setRelation('parent', $parent);
+            }
+
+            // Hydrate relations explicitly
+            $item->setRelation('children', is_array($childrenData) ? $this->hydrateMenuItems($childrenData, $item) : Collection::make());
+            $item->setRelation('descendants', is_array($descendantsData) ? $this->hydrateMenuItems($descendantsData) : Collection::make());
+            $item->setRelation('ancestors', is_array($ancestorsData) ? $this->hydrateMenuItems($ancestorsData) : Collection::make());
+
+            if (isset($item->linkable_type, $item->linkable_id) && is_array($linkableData)) {
+                $linkableModel = new ($item->linkable_type);
+                $item->setRelation('linkable', $linkableModel->newFromBuilder($linkableData));
+            } else {
+                $item->setRelation('linkable', null);
+            }
+
+            $models[] = $item;
+        }
+
+        /** @var Collection<int, MenuItem> $items */
+        $items = new Collection($models);
+
+        return $items;
     }
 }

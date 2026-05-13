@@ -43,6 +43,7 @@ use Novius\LaravelLinkable\Traits\Linkable;
  * @property-read MenuItem|null $parent
  *
  * @method static Collection<int, static> all($columns = ['*'])
+ * @method static Collection<int, static> hydrate(array $items, $connection = null)
  * @method static QueryBuilder<static>|MenuItem ancestorsAndSelf($id, array $columns = [])
  * @method static QueryBuilder<static>|MenuItem ancestorsOf($id, array $columns = [])
  * @method static QueryBuilder<static>|MenuItem applyNestedSetScope(?string $table = null)
