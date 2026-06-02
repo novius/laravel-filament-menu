@@ -32,4 +32,14 @@ return [
         'menu' => Menu::class,
         'menu_item' => MenuItem::class,
     ],
+
+    'filament' => [
+        'menu' => [
+            'navigationLabel' => null,
+            'navigationIcon' => null,
+            'navigationSort' => null,
+            'navigationGroup' => null,
+            'shouldRegisterNavigation' => true,
+        ],
+    ],
 ];

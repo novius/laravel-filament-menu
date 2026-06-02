@@ -34,6 +34,7 @@ use Novius\LaravelFilamentTranslatable\Filament\Forms\Components\Locale;
 use Novius\LaravelFilamentTranslatable\Filament\Tables\Columns\LocaleColumn;
 use Novius\LaravelFilamentTranslatable\Filament\Tables\Columns\TranslationsColumn;
 use Novius\LaravelFilamentTranslatable\Filament\Tables\Filters\LocaleFilter;
+use UnitEnum;
 
 class MenuResource extends Resource
 {
@@ -41,9 +42,32 @@ class MenuResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
-    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-bars-3-bottom-right';
-
     protected static ?string $recordRouteKeyName = 'id';
+
+    public static function getNavigationGroup(): string|UnitEnum|null
+    {
+        return config('laravel-filament-menu.filament.menu.navigationGroup');
+    }
+
+    public static function getNavigationSort(): ?int
+    {
+        return config('laravel-filament-menu.filament.menu.navigationSort');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return config('laravel-filament-menu.filament.menu.navigationLabel', static::getPluralModelLabel());
+    }
+
+    public static function getNavigationIcon(): string|BackedEnum|null
+    {
+        return config('laravel-filament-menu.filament.menu.navigationIcon', 'heroicon-o-bars-3-bottom-right');
+    }
+
+    public static function shouldRegisterNavigation(): bool
+    {
+        return config('laravel-filament-menu.filament.menu.shouldRegisterNavigation', true);
+    }
 
     public static function getModel(): string
     {
