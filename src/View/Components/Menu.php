@@ -91,7 +91,8 @@ class Menu extends Component
             $linkableData = $data['linkable'] ?? null;
 
             // Remove relations from attributes before hydration
-            $attributes = array_diff_key($data, array_flip(['children', 'descendants', 'ancestors', 'linkable']));
+            $attributes = array_diff_key($data, array_flip(['children', 'descendants', 'ancestors', 'linkable', 'menu']));
+            $attributes['extras'] = $attributes['extras'] ? json_encode($attributes['extras']) : null;
 
             /** @var MenuItem $item */
             $item = MenuItem::hydrate([$attributes])->first();
@@ -104,6 +105,7 @@ class Menu extends Component
             $item->setRelation('children', is_array($childrenData) ? $this->hydrateMenuItems($childrenData, $item) : Collection::make());
             $item->setRelation('descendants', is_array($descendantsData) ? $this->hydrateMenuItems($descendantsData) : Collection::make());
             $item->setRelation('ancestors', is_array($ancestorsData) ? $this->hydrateMenuItems($ancestorsData) : Collection::make());
+            $item->setRelation('menu', $this->menu);
 
             if (isset($item->linkable_type, $item->linkable_id) && is_array($linkableData)) {
                 $linkableModel = new ($item->linkable_type);
