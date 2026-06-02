@@ -56,17 +56,17 @@ class MenuResource extends Resource
 
     public static function getNavigationLabel(): string
     {
-        return config('laravel-filament-menu.filament.menu.navigationLabel', static::getPluralModelLabel());
+        return config('laravel-filament-menu.filament.menu.navigationLabel') ?? static::getPluralModelLabel();
     }
 
     public static function getNavigationIcon(): string|BackedEnum|null
     {
-        return config('laravel-filament-menu.filament.menu.navigationIcon', 'heroicon-o-bars-3-bottom-right');
+        return config('laravel-filament-menu.filament.menu.navigationIcon') ?? 'heroicon-o-bars-3-bottom-right';
     }
 
     public static function shouldRegisterNavigation(): bool
     {
-        return config('laravel-filament-menu.filament.menu.shouldRegisterNavigation', true);
+        return (bool) config('laravel-filament-menu.filament.menu.shouldRegisterNavigation', true);
     }
 
     public static function getModel(): string

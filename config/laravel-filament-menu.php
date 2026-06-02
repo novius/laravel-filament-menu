@@ -36,7 +36,7 @@ return [
     'filament' => [
         'menu' => [
             'navigationLabel' => null,
-            'navigationIcon' => null,
+            'navigationIcon' => 'heroicon-o-bars-3-bottom-right',
             'navigationSort' => null,
             'navigationGroup' => null,
             'shouldRegisterNavigation' => true,
