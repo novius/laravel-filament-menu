@@ -37,7 +37,7 @@ jobs:
     strategy:
       matrix:
         php-versions: ['8.2', '8.3', '8.4', '8.5']
-        laravel: [ 11.*, 12.*, 13.* ]
+        laravel: [ 12.*, 13.* ]
         filament: [ 4.*, 5.* ]
         include:
           - laravel: 13.*
@@ -47,10 +47,6 @@ jobs:
           - laravel: 12.*
             carbon: 3.*
             testbench: 10.*
-            nestedset: 6.*
-          - laravel: 11.*
-            carbon: 2.*
-            testbench: 9.*
             nestedset: 6.*
           - php-versions: '8.2'
             pest: '^3.0'
@@ -105,7 +101,7 @@ jobs:
     strategy:
       matrix:
         php-versions: ['8.2', '8.3', '8.4', '8.5']
-        laravel: [ 11.*, 12.*, 13.* ]
+        laravel: [ 12.*, 13.* ]
         filament: [ 4.*, 5.* ]
         include:
           - laravel: 13.*
@@ -115,10 +111,6 @@ jobs:
           - laravel: 12.*
             carbon: 3.*
             testbench: 10.*
-            nestedset: 6.*
-          - laravel: 11.*
-            carbon: 2.*
-            testbench: 9.*
             nestedset: 6.*
           - php-versions: '8.2'
             pest: '^3.0'
