@@ -14,5 +14,8 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    # This is a library: widen the constraints (^7.4 -> ^7.4 || ^8.1) instead of replacing them,
+    # to keep supporting the whole PHP / Laravel matrix.
+    versioning-strategy: widen
     labels:
       - "dependencies"
