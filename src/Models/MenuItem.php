@@ -160,8 +160,8 @@ class MenuItem extends Model
             /** @phpstan-ignore property.notFound */
             if ($this->linkable !== null) {
                 $href = $this->linkable->url() ?? $href;
-            } elseif (! empty($this->internal_link)) {
-                $href = LinkableFacade::getLink($this->internal_link) ?? $href;
+            } elseif (! empty($this->internal_route)) {
+                $href = LinkableFacade::getLink($this->internal_route) ?? $href;
             }
         }
 

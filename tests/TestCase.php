@@ -2,8 +2,10 @@
 
 namespace Novius\LaravelFilamentMenu\Tests;
 
+use Livewire\LivewireServiceProvider;
 use Novius\LaravelFilamentMenu\LaravelFilamentMenuServiceProvider;
 use Novius\LaravelFilamentMenu\Tests\Support\TestMenu;
+use Novius\LaravelLinkable\LaravelLinkableServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Spatie\Sluggable\SluggableServiceProvider;
 
@@ -13,6 +15,8 @@ abstract class TestCase extends Orchestra
     {
         return [
             ...(class_exists('Spatie\Sluggable\SluggableServiceProvider') ? [SluggableServiceProvider::class] : []),
+            LivewireServiceProvider::class,
+            LaravelLinkableServiceProvider::class,
             LaravelFilamentMenuServiceProvider::class,
         ];
     }
