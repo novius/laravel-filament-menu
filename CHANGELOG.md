@@ -5,7 +5,26 @@ All notable changes to `novius/laravel-filament-menu` will be documented in this
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased](https://github.com/novius/laravel-filament-menu/compare/1.0.6...HEAD)
+## [Unreleased](https://github.com/novius/laravel-filament-menu/compare/1.0.7...HEAD)
+
+## [1.0.7](https://github.com/novius/laravel-filament-menu/compare/1.0.6...1.0.7) - 2026-11-23
+
+### Fixed
+
+- Internal links to a route were rendered as `#`: `MenuItem::href()` read `internal_link` instead of the `internal_route` column.
+- The `resources.menu` config was ignored (`resources.post` was read instead).
+- After deleting a menu item, redirect to the configured menu resource.
+- `MenuSeeder` threw Mockery's `RuntimeException`, which is only installed in dev. It now throws `\RuntimeException`.
+- Resolve the morph map aliases when hydrating the linked models from the menu cache.
+
+### Changed
+
+- The configured resources are validated by `MenuManagerService`. An `InvalidArgumentException` is still thrown when building the plugin if a resource is not a Filament resource.
+- `MenuManagerService` is now a singleton. Config and lang publishing, and migrations, are only registered in console.
+
+### Maintenance
+
+- Use the Laravel package skeleton: CI on PHP 8.3 to 8.5, Pest 4, PHPStan level 8 with Larastan, CHANGELOG.
 
 ## [1.0.6](https://github.com/novius/laravel-filament-menu/compare/1.0.5...1.0.6) - 2026-09-28
 
