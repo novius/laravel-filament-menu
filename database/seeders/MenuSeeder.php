@@ -7,13 +7,13 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use LaravelLang\Locales\Data\LocaleData;
 use LaravelLang\Locales\Facades\Locales;
-use Mockery\Exception\RuntimeException;
 use Novius\LaravelFilamentMenu\Contracts\MenuTemplate;
 use Novius\LaravelFilamentMenu\Models\Menu;
+use RuntimeException;
 
 abstract class MenuSeeder extends Seeder
 {
-    /** @var Collection<int, LocaleData>|null */
+    /** @var Collection<string, LocaleData>|null */
     protected ?Collection $locales = null;
 
     /**
@@ -49,14 +49,14 @@ abstract class MenuSeeder extends Seeder
                 throw new RuntimeException('Template class '.$template.' does not implement '.MenuTemplate::class);
             }
             $name = Arr::get($config, 'name');
-            if (empty($name)) {
+            if (empty($name) || ! is_string($name)) {
                 throw new RuntimeException('name key for '.$slug.' does not exist');
             }
             $title = Arr::get($config, 'title');
 
             foreach ($locales as $locale) {
                 if ($menuParent && $menuParent->locale === $locale->code) {
-                    $menuParent->name = $this->getLocalizedString($locale, $name);
+                    $menuParent->name = $this->getLocalizedString($locale, $name) ?? $name;
                     $menuParent->title = $this->getLocalizedString($locale, $title);
                     $menuParent->slug = $slug;
                     $menuParent->template = new $template;
@@ -69,7 +69,7 @@ abstract class MenuSeeder extends Seeder
                         $menu = new Menu;
                         $menu->locale = $locale->code;
                     }
-                    $menu->name = $this->getLocalizedString($locale, $name);
+                    $menu->name = $this->getLocalizedString($locale, $name) ?? $name;
                     $menu->title = $this->getLocalizedString($locale, $title);
                     $menu->slug = $slug;
                     $menu->template = new $template;
@@ -87,6 +87,9 @@ abstract class MenuSeeder extends Seeder
         }
     }
 
+    /**
+     * @return Collection<string, LocaleData>
+     */
     protected function getLocales(): Collection
     {
         if ($this->locales === null) {
@@ -105,6 +108,9 @@ abstract class MenuSeeder extends Seeder
         return $string.($this->getLocales()->count() > 1 ? ' '.$locale->code : '');
     }
 
+    /**
+     * @param  array<string, mixed>  $config
+     */
     protected function postCreate(array $config, LocaleData $locale, Menu $menu): void {}
 
     /**
@@ -116,6 +122,8 @@ abstract class MenuSeeder extends Seeder
      *          'template' => AMenuTemplateClass::class,
      *      ],
      *  ]
+     *
+     * @return array<string, array<string, mixed>>
      */
     abstract protected function menus(): array;
 }

@@ -25,12 +25,23 @@ interface MenuTemplate
     /** @return array<Component> */
     public function fields(): array;
 
+    /** @return array<string, string> */
     public function casts(): array;
 
+    /** @return view-string */
     public function view(): string;
 
+    /** @return view-string */
     public function viewItem(): string;
 
+    /**
+     * @param  Closure|array<array-key, mixed>|string|null  $containerClasses
+     * @param  Closure|array<array-key, mixed>|string|null  $titleClasses
+     * @param  Closure|array<array-key, mixed>|string|null  $listClasses
+     * @param  Closure|array<array-key, mixed>|string|null  $listRootClasses
+     * @param  Closure|array<array-key, mixed>|string|null  $itemContainerClasses
+     * @param  Closure|array<array-key, mixed>|string|null  $itemClasses
+     */
     public function render(
         Menu $menu,
         Collection $items,
@@ -46,6 +57,11 @@ interface MenuTemplate
         ?string $itemContainsActiveClasses = null,
     ): string;
 
+    /**
+     * @param  Closure|array<array-key, mixed>|string|null  $listClasses
+     * @param  Closure|array<array-key, mixed>|string|null  $itemContainerClasses
+     * @param  Closure|array<array-key, mixed>|string|null  $itemClasses
+     */
     public function renderItem(
         Menu $menu,
         MenuItem $item,

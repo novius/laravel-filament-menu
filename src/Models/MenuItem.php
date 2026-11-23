@@ -32,7 +32,7 @@ use Novius\LaravelLinkable\Traits\Linkable;
  * @property string|null $html
  * @property bool $target_blank
  * @property string|null $html_classes
- * @property Fluent $extras
+ * @property Fluent<string, mixed> $extras
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read Collection<int, MenuItem> $ancestors
@@ -43,15 +43,15 @@ use Novius\LaravelLinkable\Traits\Linkable;
  * @property-read MenuItem|null $parent
  *
  * @method static Collection<int, static> all($columns = ['*'])
- * @method static Collection<int, static> hydrate(array $items, $connection = null)
- * @method static QueryBuilder<static>|MenuItem ancestorsAndSelf($id, array $columns = [])
- * @method static QueryBuilder<static>|MenuItem ancestorsOf($id, array $columns = [])
+ * @method static Collection<int, static> hydrate(array<int, array<string, mixed>> $items, $connection = null)
+ * @method static QueryBuilder<static>|MenuItem ancestorsAndSelf($id, array<int, string> $columns = [])
+ * @method static QueryBuilder<static>|MenuItem ancestorsOf($id, array<int, string> $columns = [])
  * @method static QueryBuilder<static>|MenuItem applyNestedSetScope(?string $table = null)
  * @method static QueryBuilder<static>|MenuItem countErrors()
  * @method static QueryBuilder<static>|MenuItem d()
  * @method static QueryBuilder<static>|MenuItem defaultOrder(string $dir = 'asc')
- * @method static QueryBuilder<static>|MenuItem descendantsAndSelf($id, array $columns = [])
- * @method static QueryBuilder<static>|MenuItem descendantsOf($id, array $columns = [], $andSelf = false)
+ * @method static QueryBuilder<static>|MenuItem descendantsAndSelf($id, array<int, string> $columns = [])
+ * @method static QueryBuilder<static>|MenuItem descendantsOf($id, array<int, string> $columns = [], $andSelf = false)
  * @method static QueryBuilder<static>|MenuItem fixSubtree($root)
  * @method static QueryBuilder<static>|MenuItem fixTree($root = null)
  * @method static Collection<int, static> get($columns = ['*'])
@@ -61,7 +61,7 @@ use Novius\LaravelLinkable\Traits\Linkable;
  * @method static QueryBuilder<static>|MenuItem hasChildren()
  * @method static QueryBuilder<static>|MenuItem hasParent()
  * @method static QueryBuilder<static>|MenuItem isBroken()
- * @method static QueryBuilder<static>|MenuItem leaves(array $columns = [])
+ * @method static QueryBuilder<static>|MenuItem leaves(array<int, string> $columns = [])
  * @method static QueryBuilder<static>|MenuItem makeGap(int $cut, int $height)
  * @method static QueryBuilder<static>|MenuItem moveNode($key, $position)
  * @method static QueryBuilder<static>|MenuItem newModelQuery()
@@ -71,10 +71,10 @@ use Novius\LaravelLinkable\Traits\Linkable;
  * @method static QueryBuilder<static>|MenuItem orWhereNodeBetween($values)
  * @method static QueryBuilder<static>|MenuItem orWhereNotDescendantOf($id)
  * @method static QueryBuilder<static>|MenuItem query()
- * @method static QueryBuilder<static>|MenuItem rebuildSubtree($root, array $data, $delete = false)
- * @method static QueryBuilder<static>|MenuItem rebuildTree(array $data, $delete = false, $root = null)
+ * @method static QueryBuilder<static>|MenuItem rebuildSubtree($root, array<int, mixed> $data, $delete = false)
+ * @method static QueryBuilder<static>|MenuItem rebuildTree(array<int, mixed> $data, $delete = false, $root = null)
  * @method static QueryBuilder<static>|MenuItem reversed()
- * @method static QueryBuilder<static>|MenuItem root(array $columns = [])
+ * @method static QueryBuilder<static>|MenuItem root(array<int, string> $columns = [])
  * @method static QueryBuilder<static>|MenuItem whereAncestorOf($id, $andSelf = false, $boolean = 'and')
  * @method static QueryBuilder<static>|MenuItem whereAncestorOrSelf($id)
  * @method static QueryBuilder<static>|MenuItem whereDescendantOf($id, $boolean = 'and', $not = false, $andSelf = false)
@@ -118,16 +118,25 @@ class MenuItem extends Model
         });
     }
 
+    /**
+     * @return BelongsTo<Menu, $this>
+     */
     public function menu(): BelongsTo
     {
         return $this->belongsTo(MenuManager::getMenuModel(), 'menu_id');
     }
 
+    /**
+     * @return MorphTo<Model, $this>
+     */
     public function linkable(): MorphTo
     {
         return $this->morphTo();
     }
 
+    /**
+     * @return array<int, string>
+     */
     protected function getScopeAttributes(): array
     {
         return [
@@ -135,6 +144,9 @@ class MenuItem extends Model
         ];
     }
 
+    /**
+     * @return array<string, string>
+     */
     public function getExtrasCasts(): array
     {
         /** @phpstan-ignore nullsafe.neverNull, nullCoalesce.expr */
@@ -157,8 +169,8 @@ class MenuItem extends Model
         }
 
         if ($this->link_type === LinkType::internal_link) {
-            /** @phpstan-ignore property.notFound */
             if ($this->linkable !== null) {
+                /** @phpstan-ignore method.notFound (url() comes from the Linkable trait) */
                 $href = $this->linkable->url() ?? $href;
             } elseif (! empty($this->internal_route)) {
                 $href = LinkableFacade::getLink($this->internal_route) ?? $href;

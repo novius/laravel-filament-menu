@@ -1,9 +1,11 @@
 {
+    "$schema": "https://getcomposer.org/schema.json",
     "name": "novius/laravel-filament-menu",
     "description": "A Filament package to manage menus in your application.",
     "keywords": [
         "laravel",
         "filament",
+        "novius",
         "menu"
     ],
     "license": "AGPL-3.0-or-later",
@@ -28,11 +30,11 @@
     },
     "require-dev": {
         "larastan/larastan": "^2.0 | ^3.0",
+        "laravel/pao": "^1.0",
         "laravel/pint": "^1.7",
         "orchestra/testbench": "^9.0 | ^10.0 | ^11.0",
-        "pestphp/pest": "^2.28 | ^v3.7",
-        "pestphp/pest-plugin-laravel": "^2.0 | ^3.0",
-        "roave/security-advisories": "dev-latest",
+        "pestphp/pest": "^4.0",
+        "phpstan/extension-installer": "^1.4",
         "symfony/dom-crawler": "^7.4"
     },
     "autoload": {
@@ -50,6 +52,43 @@
             "Workbench\\Database\\Seeders\\": "workbench/database/seeders/"
         }
     },
+    "scripts": {
+        "post-autoload-dump": [
+            "@clear",
+            "@prepare"
+        ],
+        "prepare": [
+            "@php vendor/bin/testbench package:discover --ansi"
+        ],
+        "build": [
+            "@php vendor/bin/testbench workbench:build --ansi"
+        ],
+        "serve": [
+            "Composer\\Config::disableProcessTimeout",
+            "@build",
+            "@php vendor/bin/testbench serve --ansi"
+        ],
+        "lint": [
+            "vendor/bin/pint --parallel"
+        ],
+        "lint:check": [
+            "vendor/bin/pint --parallel --test"
+        ],
+        "analyse": [
+            "vendor/bin/phpstan analyse --memory-limit 1G"
+        ],
+        "test:unit": [
+            "@php vendor/bin/pest"
+        ],
+        "test": [
+            "@lint:check",
+            "@analyse",
+            "@test:unit"
+        ],
+        "clear": [
+            "@php vendor/bin/testbench package:purge-skeleton --ansi"
+        ]
+    },
     "extra": {
         "laravel": {
             "providers": [
@@ -60,38 +99,13 @@
             }
         }
     },
-    "scripts": {
-        "cs-fix": [
-            "./vendor/bin/pint -v"
-        ],
-        "lint": [
-            "@composer cs-fix -- --test"
-        ],
-        "phpstan": [
-            "vendor/bin/phpstan analyse --memory-limit 1G"
-        ],
-        "test": [
-            "vendor/bin/pest"
-        ],
-        "post-autoload-dump": [
-            "@clear",
-            "@prepare"
-        ],
-        "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
-        "prepare": "@php vendor/bin/testbench package:discover --ansi",
-        "build": "@php vendor/bin/testbench workbench:build --ansi",
-        "serve": [
-            "Composer\\Config::disableProcessTimeout",
-            "@build",
-            "@php vendor/bin/testbench serve --ansi"
-        ]
-    },
     "config": {
         "sort-packages": true,
         "allow-plugins": {
+            "phpstan/extension-installer": true,
             "pestphp/pest-plugin": true
         }
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "prefer-stable": true
 }

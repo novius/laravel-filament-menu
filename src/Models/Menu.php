@@ -43,7 +43,9 @@ use Spatie\Sluggable\SlugOptions;
  */
 class Menu extends Model
 {
+    /** @use HasFactory<MenuFactory> */
     use HasFactory;
+
     use HasSlug;
     use Translatable;
 
@@ -62,12 +64,16 @@ class Menu extends Model
     protected static function booted(): void
     {
         static::saving(static function (Menu $menu) {
-            if (empty($menu->locale) && MenuManager::locales()->count() === 1) {
-                $menu->locale = MenuManager::locales()->first()->code;
+            $locales = MenuManager::locales();
+            if (empty($menu->locale) && $locales->count() === 1) {
+                $menu->locale = $locales->firstOrFail()->code;
             }
         });
     }
 
+    /**
+     * @return HasMany<MenuItem, $this>
+     */
     public function items(): HasMany
     {
         return $this->hasMany(MenuManager::getMenuItemModel(), 'menu_id');

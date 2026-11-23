@@ -38,15 +38,23 @@ class CreateMenuItem extends CreateRecord
 
     public function getBreadcrumbs(): array
     {
+        $menu = $this->getMenu();
+        if ($menu === null) {
+            return parent::getBreadcrumbs();
+        }
+
         $breadcrumbs = [
             MenuManager::getMenuResource()::getUrl() => MenuManager::getMenuResource()::getBreadcrumb(),
-            MenuManager::getMenuResource()::getUrl('view', ['record' => $this->getMenu()]) => $this->getMenu()->name,
-            MenuManager::getMenuResource()::getUrl('edit', ['record' => $this->getMenu()]) => MenuManager::getMenuItemResource()::getBreadcrumb(),
-            ...(filled($breadcrumb = $this->getBreadcrumb()) ? [$breadcrumb] : []),
+            MenuManager::getMenuResource()::getUrl('view', ['record' => $menu]) => $menu->name,
+            MenuManager::getMenuResource()::getUrl('edit', ['record' => $menu]) => MenuManager::getMenuItemResource()::getBreadcrumb(),
         ];
 
         if (filled($cluster = static::getCluster())) {
-            return $cluster::unshiftClusterBreadcrumbs($breadcrumbs);
+            $breadcrumbs = $cluster::unshiftClusterBreadcrumbs($breadcrumbs);
+        }
+
+        if (filled($breadcrumb = $this->getBreadcrumb())) {
+            $breadcrumbs[] = $breadcrumb;
         }
 
         return $breadcrumbs;
@@ -58,7 +66,8 @@ class CreateMenuItem extends CreateRecord
             return $this->menu;
         }
 
-        $this->menu = Route::current()?->parameter('menu');
+        $menu = Route::current()?->parameter('menu');
+        $this->menu = $menu instanceof Menu ? $menu : null;
 
         return $this->menu;
     }
@@ -70,7 +79,7 @@ class CreateMenuItem extends CreateRecord
         }
 
         $parent_id = Route::current()?->parameter('parent');
-        if ($parent_id) {
+        if (is_numeric($parent_id)) {
             $this->parent_id = (int) $parent_id;
         }
 

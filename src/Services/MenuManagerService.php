@@ -2,9 +2,11 @@
 
 namespace Novius\LaravelFilamentMenu\Services;
 
+use Filament\Resources\Resource as FilamentResource;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use InvalidArgumentException;
 use LaravelLang\Locales\Data\LocaleData;
 use LaravelLang\Locales\Facades\Locales;
 use Novius\LaravelFilamentMenu\Contracts\MenuTemplate;
@@ -17,6 +19,9 @@ use Symfony\Component\Finder\Finder;
 
 class MenuManagerService
 {
+    /**
+     * @param  array<string, mixed>  $config
+     */
     public function __construct(protected array $config = []) {}
 
     /**
@@ -74,10 +79,14 @@ class MenuManagerService
         return Arr::get($this->config, 'models.menu', Menu::class);
     }
 
-    /** @return class-string<MenuResource> */
+    /**
+     * @return class-string<FilamentResource>
+     *
+     * @throws InvalidArgumentException
+     */
     public function getMenuResource(): string
     {
-        return Arr::get($this->config, 'resources.post', MenuResource::class);
+        return $this->getResource('menu', MenuResource::class, 'menu');
     }
 
     /** @return class-string<MenuItem> */
@@ -86,13 +95,36 @@ class MenuManagerService
         return Arr::get($this->config, 'models.menu_item', MenuItem::class);
     }
 
-    /** @return class-string<MenuItemResource> */
+    /**
+     * @return class-string<FilamentResource>
+     *
+     * @throws InvalidArgumentException
+     */
     public function getMenuItemResource(): string
     {
-        return Arr::get($this->config, 'resources.menu_item', MenuItemResource::class);
+        return $this->getResource('menu_item', MenuItemResource::class, 'menu item');
     }
 
-    protected function autoloadIn($config_key): array
+    /**
+     * @param  class-string<FilamentResource>  $default
+     * @return class-string<FilamentResource>
+     *
+     * @throws InvalidArgumentException
+     */
+    protected function getResource(string $key, string $default, string $label): string
+    {
+        $resource = Arr::get($this->config, 'resources.'.$key, $default);
+        if (! is_string($resource) || ! is_subclass_of($resource, FilamentResource::class)) {
+            throw new InvalidArgumentException('The '.$label.' resource must be a subclass of '.FilamentResource::class);
+        }
+
+        return $resource;
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    protected function autoloadIn(string $config_key): array
     {
         $namespace = app()->getNamespace();
 

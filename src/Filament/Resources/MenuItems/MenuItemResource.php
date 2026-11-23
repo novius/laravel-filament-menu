@@ -62,7 +62,6 @@ class MenuItemResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        $getMenu = static fn ($menu_id) => $menu_id ? Menu::find($menu_id) : null;
 
         return $schema
             ->components([
@@ -128,8 +127,8 @@ class MenuItemResource extends Resource
                 Linkable::make('internal_route')
                     ->label(trans('laravel-filament-menu::menu.internal_link'))
                     ->rules('required_if:link_type,'.LinkType::internal_link->value)
-                    ->setLocale(function (Get $get) use ($getMenu) {
-                        return $getMenu($get('menu_id'))?->locale;
+                    ->setLocale(function (Get $get) {
+                        return static::getMenu($get('menu_id'))?->locale;
                     })
                     ->hidden(fn (Get $get) => $get('link_type') !== LinkType::internal_link)
                     ->afterStateHydrated(function (Get $get, Linkable $component) {
@@ -195,8 +194,8 @@ class MenuItemResource extends Resource
 
                 Grid::make()
                     ->columns(1)
-                    ->schema(function (Get $get) use ($getMenu) {
-                        $menu = $getMenu($get('menu_id'));
+                    ->schema(function (Get $get) {
+                        $menu = static::getMenu($get('menu_id'));
 
                         return $menu?->template->fields() ?? [];
                     }),
@@ -267,12 +266,17 @@ class MenuItemResource extends Resource
         ];
     }
 
-    protected static function getMenu($menu_id): ?Menu
+    protected static function getMenu(mixed $menu_id): ?Menu
     {
+        if (! is_numeric($menu_id)) {
+            return null;
+        }
+        $menu_id = (int) $menu_id;
+
         if (static::$menu?->id === $menu_id) {
             return static::$menu;
         }
-        static::$menu = Menu::find($menu_id);
+        static::$menu = Menu::query()->find($menu_id);
 
         return static::$menu;
     }

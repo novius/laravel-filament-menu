@@ -3,8 +3,6 @@
          xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
          bootstrap="vendor/autoload.php"
          colors="true"
-         executionOrder="depends,defects"
-         beStrictAboutOutputDuringTests="true"
          failOnRisky="true"
          failOnWarning="true"
          cacheDirectory=".phpunit.cache">
@@ -19,7 +17,7 @@
         </include>
     </source>
     <php>
-        <env name="APP_KEY" value="Ackf3gvCDY2RIY2Aae0V4W30zd9v46pA"/>
+        <env name="APP_KEY" value="base64:2fl+Ktvkfl+Fuz4Qp/A75G2RTiWVA/ZoKZvp6fiiM10="/>
         <env name="DB_CONNECTION" value="sqlite"/>
         <env name="DB_DATABASE" value=":memory:"/>
     </php>

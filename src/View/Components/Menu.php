@@ -13,6 +13,14 @@ class Menu extends Component
 {
     protected ?MenuModel $menu = null;
 
+    /**
+     * @param  Closure|array<array-key, mixed>|string|null  $containerClasses
+     * @param  Closure|array<array-key, mixed>|string|null  $titleClasses
+     * @param  Closure|array<array-key, mixed>|string|null  $listClasses
+     * @param  Closure|array<array-key, mixed>|string|null  $listRootClasses
+     * @param  Closure|array<array-key, mixed>|string|null  $itemContainerClasses
+     * @param  Closure|array<array-key, mixed>|string|null  $itemClasses
+     */
     public function __construct(
         string $menuSlug,
         ?string $locale,
@@ -37,12 +45,13 @@ class Menu extends Component
 
     public function render(): string
     {
-        if ($this->menu === null) {
+        $menu = $this->menu;
+        if ($menu === null) {
             return '';
         }
 
-        $itemsData = Cache::rememberForever($this->menu->getCacheName(), function () {
-            return MenuItem::scoped(['menu_id' => $this->menu->id])
+        $itemsData = Cache::rememberForever($menu->getCacheName(), function () use ($menu) {
+            return MenuItem::scoped(['menu_id' => $menu->id])
                 ->withDepth()
                 ->defaultOrder()
                 ->with(['children', 'descendants', 'ancestors', 'linkable'])
@@ -108,7 +117,8 @@ class Menu extends Component
             $item->setRelation('menu', $this->menu);
 
             if (isset($item->linkable_type, $item->linkable_id) && is_array($linkableData)) {
-                $linkableModel = new ($item->linkable_type);
+                // createModelByType() resolves the morph map aliases
+                $linkableModel = $item->linkable()->createModelByType($item->linkable_type);
                 $item->setRelation('linkable', $linkableModel->newFromBuilder($linkableData));
             } else {
                 $item->setRelation('linkable', null);

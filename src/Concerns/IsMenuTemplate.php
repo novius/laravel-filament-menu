@@ -41,14 +41,23 @@ trait IsMenuTemplate
         return [];
     }
 
+    /** @return array<string, string> */
     public function casts(): array
     {
         return [];
     }
 
+    /** @return view-string */
     abstract public function view(): string;
 
     /**
+     * @param  Closure|array<array-key, mixed>|string|null  $containerClasses
+     * @param  Closure|array<array-key, mixed>|string|null  $titleClasses
+     * @param  Closure|array<array-key, mixed>|string|null  $listClasses
+     * @param  Closure|array<array-key, mixed>|string|null  $listRootClasses
+     * @param  Closure|array<array-key, mixed>|string|null  $itemContainerClasses
+     * @param  Closure|array<array-key, mixed>|string|null  $itemClasses
+     *
      * @throws Throwable
      */
     public function render(
@@ -89,9 +98,14 @@ trait IsMenuTemplate
         ])->render();
     }
 
+    /** @return view-string */
     abstract public function viewItem(): string;
 
     /**
+     * @param  Closure|array<array-key, mixed>|string|null  $listClasses
+     * @param  Closure|array<array-key, mixed>|string|null  $itemContainerClasses
+     * @param  Closure|array<array-key, mixed>|string|null  $itemClasses
+     *
      * @throws Throwable
      */
     public function renderItem(

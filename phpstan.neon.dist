@@ -1,0 +1,17 @@
+parameters:
+    # Level 10 is the highest level
+    level: 8
+
+    paths:
+        - src
+        - config
+        - database
+
+    tmpDir: build/phpstan
+
+    ignoreErrors:
+        -
+            identifier: phpDoc.parseError
+        -
+            identifier: generics.notGeneric
+        - "#toTree#"

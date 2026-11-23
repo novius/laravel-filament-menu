@@ -1,6 +1,6 @@
 # Laravel Filament Menu Manager
 
-[![Novius CI](https://github.com/novius/laravel-filament-menu/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/novius/laravel-filament-menu/actions/workflows/main.yml)
+[![Tests](https://github.com/novius/laravel-filament-menu/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/novius/laravel-filament-menu/actions/workflows/tests.yml)
 [![Packagist Release](https://img.shields.io/packagist/v/novius/laravel-filament-menu.svg?maxAge=1800&style=flat-square)](https://packagist.org/packages/novius/laravel-filament-menu)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](http://www.gnu.org/licenses/agpl-3.0)
 
@@ -379,17 +379,28 @@ class MenuSeeder extends \Novius\LaravelFilamentMenu\Database\Seeders\MenuSeeder
 
 ## Lint
 
-Run PHP-CS Fixer with:
+Run Laravel Pint with:
 
 ```sh
-composer run-script lint
+composer lint
 ```
+
+## Testing
+
+Run the linter, PHPStan and the tests with:
+
+```sh
+composer test
+```
+
+## Changelog
+
+Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
 
 ## Contributing
 
 Contributions are welcome!
 Leave an issue on GitHub, or create a Pull Request.
-
 
 ## License
 

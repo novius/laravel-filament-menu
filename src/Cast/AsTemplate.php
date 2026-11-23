@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 use Novius\LaravelFilamentMenu\Contracts\MenuTemplate;
 use Novius\LaravelFilamentMenu\Facades\MenuManager;
 
+/**
+ * @implements CastsAttributes<MenuTemplate|null, MenuTemplate|string|null>
+ */
 class AsTemplate implements CastsAttributes
 {
     public function get(Model $model, string $key, mixed $value, array $attributes): ?MenuTemplate

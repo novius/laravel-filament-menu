@@ -5,8 +5,8 @@ namespace Novius\LaravelFilamentMenu\Filament\Resources\MenuItems\Pages;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\ViewAction;
 use Filament\Resources\Pages\EditRecord;
+use Illuminate\Contracts\Support\Htmlable;
 use Novius\LaravelFilamentMenu\Facades\MenuManager;
-use Novius\LaravelFilamentMenu\Filament\Resources\Menus\MenuResource;
 use Novius\LaravelFilamentMenu\Models\MenuItem;
 
 class EditMenuItem extends EditRecord
@@ -31,7 +31,7 @@ class EditMenuItem extends EditRecord
 
         $action
             ->authorize(MenuManager::getMenuItemResource()::canDelete($record))
-            ->successRedirectUrl(MenuResource::getUrl('edit', ['record' => $record->menu]));
+            ->successRedirectUrl(MenuManager::getMenuResource()::getUrl('edit', ['record' => $record->menu]));
     }
 
     public function getBreadcrumbs(): array
@@ -46,14 +46,15 @@ class EditMenuItem extends EditRecord
         ];
 
         if ($record->exists) {
-            $breadcrumbs[MenuManager::getMenuItemResource()::getUrl('edit', ['record' => $record])] = $this->getRecordTitle();
+            $title = $this->getRecordTitle();
+            $breadcrumbs[MenuManager::getMenuItemResource()::getUrl('edit', ['record' => $record])] = $title instanceof Htmlable ? $title->toHtml() : $title;
+        }
+
+        if (filled($cluster = static::getCluster())) {
+            $breadcrumbs = $cluster::unshiftClusterBreadcrumbs($breadcrumbs);
         }
 
         $breadcrumbs[] = $this->getBreadcrumb();
-
-        if (filled($cluster = static::getCluster())) {
-            return $cluster::unshiftClusterBreadcrumbs($breadcrumbs);
-        }
 
         return $breadcrumbs;
     }
